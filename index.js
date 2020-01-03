@@ -61,7 +61,9 @@ class CASL {
       // We also need $allFields to ensure that if no rules are specified, all fields are to be retrieved
       this[name] = {
         ...actions,
-        $allFields: Object.keys(mongoose[name].paths)
+        $allFields: Object.keys(
+          mongoose[name].paths || mongoose[name].schema.paths
+        )
       };
     });
   }

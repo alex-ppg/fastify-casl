@@ -32,39 +32,35 @@ The configuration object structure can be found below:
 The `mongooseSchemas` property accepts a [fastify-mongoose-driver](https://github.com/alex-ppg/fastify-mongoose) instance to extract all the fields of a specific asset. The inclusion of the above library is optional, as the internal code of the library simply looks at the `mongooseSchemas[NAME_OF_ASSET].paths` property, but is provided to prevent schema repetition. For instance, this library pairs nicely with [fastify-mongoose-driver](https://github.com/alex-ppg/fastify-mongoose) as one can declare the plugin configuration as follows:
 
 ```javascript
-fastify.register(
-  require("fastify-mongoose-driver").plugin,
-  {
-    uri: MONGODB_URI,
-    settings: MONGOOSE_SETTINGS,
-    models: MONGOOSE_MODELS,
-    useNameAndAlias: true
-  }
-);
+fastify.register(require("fastify-mongoose-driver").plugin, {
+  uri: MONGODB_URI,
+  settings: MONGOOSE_SETTINGS,
+  models: MONGOOSE_MODELS,
+  useNameAndAlias: true
+});
 
-fastify.register(
-  require("fastify-casl"),
-  parent => ({
-    mongooseSchemas: parent.mongoose,
-    assets: ASSET_RULE_ARRAY
-  })
-);
+fastify.register(require("fastify-casl"), parent => ({
+  mongooseSchemas: parent.mongoose,
+  assets: ASSET_RULE_ARRAY
+}));
 ```
 
-Alternatively, if you do not want to pass in a mongoose instance you can simply specify a proper object conforming to the `mongooseSchemas[NAME_OF_ASSET].paths` lookup:
+Alternatively, if you do not want to pass in a mongoose instance you can simply specify a proper object conforming to the `mongooseSchemas[NAME_OF_ASSET].paths` or `mongooseSchemas[NAME_OF_ASSET].schema.paths` lookup:
 
 ```javascript
-fastify.register(
-  require("fastify-casl"),
-  parent => ({
-    mongooseSchemas: {
-      ASSET_NAME: {
+fastify.register(require("fastify-casl"), parent => ({
+  mongooseSchemas: {
+    ASSET_NAME: {
+      paths: ["ALL_ASSET_PROPERTY_NAMES"]
+    },
+    ASSET_NAME_2: {
+      schema: {
         paths: ["ALL_ASSET_PROPERTY_NAMES"]
       }
-    },
-    assets: ASSET_RULE_ARRAY
-  })
-);
+    }
+  },
+  assets: ASSET_RULE_ARRAY
+}));
 ```
 
 If a permission is inexistent, it is possible to either deny by default or allow by default depending on the `denyByDefault` option passed during plugin registration. This value is set to `false` when omitted so make sure to specify `true` for sensitive applications.
@@ -126,7 +122,7 @@ The plugin supports basic and dynamic context-based rules via the `$if` operator
 ```javascript
 {
   $if: {
-    _id: 2
+    _id: 2;
   }
 }
 ```
@@ -136,7 +132,7 @@ In dynamic rules, we prefix the attribute we wish to check with the `$` operator
 ```javascript
 {
   $if: {
-    $author: 'user.id'
+    $author: "user.id";
   }
 }
 ```
@@ -178,7 +174,7 @@ It will automatically deduce that the asset currently concerned is the `Post` as
 
 The sanitization operation of `guardPath` is done on the `request.body` of the request.
 
-The `sanitizeOutput` factory takes three arguments. The first is once again the path of the decoded JWT payload that represents a user role defaulting to `type`, the second is the path that contains the asset to be sanitized in the response payload and the third parameter is the explicitly specified asset name. 
+The `sanitizeOutput` factory takes three arguments. The first is once again the path of the decoded JWT payload that represents a user role defaulting to `type`, the second is the path that contains the asset to be sanitized in the response payload and the third parameter is the explicitly specified asset name.
 
 The new parameter here allows one to only sanitize a specific portion of a response payload. This is especially useful in contexts when the API response includes a `message` property and a `post` for instance property that contains the actual `Post`. In such a case, we can specify `"post"` as the second argument of the `sanitizeOutput` factory to only sanitize that part of the request. An exemplary usage of the above can be found below:
 
