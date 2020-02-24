@@ -89,7 +89,7 @@ class CASL {
         this.registerAssets(
           typeof rulePromise === "object"
             ? await rulePromise
-            : await rulePromise()
+            : await rulePromise(r)
         );
 
       if (!asset) {
@@ -151,7 +151,7 @@ class CASL {
         this.registerAssets(
           typeof rulePromise === "object"
             ? await rulePromise
-            : await rulePromise()
+            : await rulePromise(r)
         );
 
       if (!asset) {
