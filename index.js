@@ -20,6 +20,10 @@ class CASL {
     this.denyByDefault = denyByDefault;
     this.verbose = verbose;
 
+    this.registerAssets(mongoose, assets);
+  }
+
+  registerAssets(mongoose, assets) {
     assets.forEach(({ name, actions }) => {
       // Define class with dynamic name for casl checking
       this.assetClasses[name] = class {
@@ -33,7 +37,7 @@ class CASL {
       };
 
       // For each action (GET, POST etc.)
-      Object.keys(actions).map(action => {
+      Object.keys(actions).forEach(action => {
         // For each user described in action (writer, admin etc.)
         Object.keys(actions[action]).forEach(user => {
           if (
