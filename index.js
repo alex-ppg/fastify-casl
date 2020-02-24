@@ -15,15 +15,17 @@ const pick = require("lodash/pick");
 
 class CASL {
   assetClasses = {};
+  mongoose = {};
 
   constructor(mongoose, assets, denyByDefault, verbose) {
     this.denyByDefault = denyByDefault;
     this.verbose = verbose;
+    this.mongoose = mongoose;
 
-    this.registerAssets(mongoose, assets);
+    this.registerAssets(assets);
   }
 
-  registerAssets(mongoose, assets) {
+  registerAssets(assets) {
     assets.forEach(({ name, actions }) => {
       // Define class with dynamic name for casl checking
       this.assetClasses[name] = class {
@@ -66,17 +68,29 @@ class CASL {
       this[name] = {
         ...actions,
         $allFields: Object.keys(
-          mongoose[name].paths || mongoose[name].schema.paths
+          this.mongoose[name].paths || this.mongoose[name].schema.paths
         )
       };
     });
   }
 
-  sanitizeOutput(userField = "type", path = undefined, asset = undefined) {
+  sanitizeOutput(
+    userField = "type",
+    path = undefined,
+    asset = undefined,
+    rulePromise = undefined
+  ) {
     return async (r, _, payload) => {
       const {
         raw: { url }
       } = r;
+
+      if (rulePromise)
+        this.registerAssets(
+          typeof rulePromise === "object"
+            ? await rulePromise
+            : await rulePromise()
+        );
 
       if (!asset) {
         const end =
@@ -127,11 +141,18 @@ class CASL {
     };
   }
 
-  guardPath(userField = "type", asset = undefined) {
+  guardPath(userField = "type", asset = undefined, rulePromise = undefined) {
     return async r => {
       const {
         raw: { url }
       } = r;
+
+      if (rulePromise)
+        this.registerAssets(
+          typeof rulePromise === "object"
+            ? await rulePromise
+            : await rulePromise()
+        );
 
       if (!asset) {
         const end =
