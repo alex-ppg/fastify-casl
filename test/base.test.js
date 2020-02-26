@@ -296,7 +296,7 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -365,8 +365,8 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"],
-              $if: {
+              "@fields": ["title", "author", "content"],
+              "@if": {
                 _id: 2
               }
             }
@@ -433,11 +433,11 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: [
+              "@fields": [
                 ["title", "author", "content"],
                 ["title", "comments", "summary"]
               ],
-              $if: [
+              "@if": [
                 {
                   _id: 2
                 },
@@ -514,9 +514,9 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["_id", "title", "author", "content"],
-              $if: {
-                $_id: "nested.value"
+              "@fields": ["_id", "title", "author", "content"],
+              "@if": {
+                "@_id": "nested.value"
               }
             }
           }
@@ -583,7 +583,7 @@ t.test(
         actions: {
           POST: {
             writer: {
-              $fields: ["_id", "title", "author", "content"]
+              "@fields": ["_id", "title", "author", "content"]
             }
           }
         }
@@ -646,7 +646,7 @@ t.test(
         actions: {
           PATCH: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -717,7 +717,7 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -791,7 +791,7 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -853,8 +853,8 @@ t.test(
         name: "Post",
         actions: {
           GET: {
-            $default: {
-              $fields: ["title", "author", "content"]
+            "@default": {
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -925,7 +925,7 @@ t.test(
           DELETE: {
             writer: {
               writer: {
-                $fields: ["message"]
+                "@fields": ["message"]
               }
             }
           }
@@ -987,7 +987,7 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
@@ -1052,7 +1052,7 @@ t.test(
         actions: {
           GET: {
             writer: {
-              $fields: ["title", "author", "content"]
+              "@fields": ["title", "author", "content"]
             }
           }
         }
