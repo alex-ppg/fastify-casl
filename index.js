@@ -52,7 +52,7 @@ class CASL {
           const rule = {};
 
           // If the value is true, the destructuring will result in undefined values for $if & $fields ensuring no type of rule checking
-          const { $if, $fields } = actions[action][user];
+          const { "@if": $if, "@fields": $fields } = actions[action][user];
 
           if (Array.isArray($fields)) rule.$fields = $fields;
 
@@ -205,7 +205,7 @@ class CASL {
 
     if (keys.length !== 0) {
       keys.forEach(key => {
-        if (key[0] === "$") {
+        if (key[0] === "@") {
           $if[key.substring(1)] = this.getNestedValue(userInfo, $if[key]);
           delete $if[key];
         }
@@ -221,10 +221,10 @@ class CASL {
     return AbilityBuilder.define(can => {
       if (
         this[asset][action] &&
-        (this[asset][action][userType] || this[asset][action].$default)
+        (this[asset][action][userType] || this[asset][action]["@default"])
       ) {
-        let { $if, $fields } =
-          this[asset][action][userType] || this[asset][action].$default;
+        let { "@if": $if, "@fields": $fields } =
+          this[asset][action][userType] || this[asset][action]["@default"];
         if (Array.isArray($if)) {
           $if.forEach(($fi, i) => {
             can(
