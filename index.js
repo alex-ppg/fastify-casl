@@ -223,7 +223,7 @@ class CASL {
         this[asset][action] &&
         (this[asset][action][userType] || this[asset][action]["@default"])
       ) {
-        let { "@if": $if, "@fields": $fields } =
+        let { $if, $fields } =
           this[asset][action][userType] || this[asset][action]["@default"];
         if (Array.isArray($if)) {
           $if.forEach(($fi, i) => {
